@@ -54,5 +54,19 @@ struct DFA {
         
     }
     };
+    void reverse(NFA& nfa,const DFA& dfa){
+        nfa.init.clear();
+        nfa.pool.assign(dfa.pool.size(),NFA::State());
+        for(size_t i=0; i<dfa.pool.size();i++){
+            for(map<char,size_t>::const_iterator j = dfa.pool[i].trans.begin();
+            j!=dfa.pool[i].trans.end();
+            j++)
+            nfa.insert(j->second,j->first,i);
+            if(dfa.pool[i].final)
+            nfa.init.insert(i);
+        }
+        nfa.pool[dfa.init].final=1;
+    }
+
  
 
