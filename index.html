@@ -3,7 +3,35 @@
   <head>
     <meta charset="utf-8">
     <title>RegEx2DFA</title>
-    
+    <link rel="stylesheet" href="assets/main.css">
+    <link rel="stylesheet" href="assets/gh-fork-ribbion.css">
+    <script src="assets/jquery-2.1.1.min.js"></script>
+    <script src="assets/RegEx2Dot.js"></script>
+    <script src="assets/viz.js"></script>
+    <script>
+    var getParameter =function(key){
+        key =key.replace(/[\[]/,"\\[").replace(/[\]]/,"\\]");
+        var regex =new RegExp("[\\?&]"+ key + "=([^&#]*)"),
+        results=regex.exec(location.search);
+        return results ==null ? "" : decodeURIComponent(results[1]);
+    }
+    var RegEx2Dot = module.cwrap('RegEx2Dot','string',['string']);
+    var regex,dot,svg;
+    $(function(){
+        if(getParameter('regex')!=''){
+            regex=getParameter('regex');
+            $('#regex').attr('value',regex);
+            dot=RegEx2Dot(regex);
+            svg=viz(dot,"svg");
+            $('#dfa').html(svg);
+            $('#getDot').attr('download','dfa.dot');
+            $('#getDot').attr('href',"data:text/vnd.graphviz;charset=utf-8,"+dot);
+            $('#getsvg').attr('download','dfa.svg');
+            $('#getsvg').attr('href',"data:image/svg+xml;charset=utf-8, "+svg);
+            $('#button').css('display','block');
+        }
+    })
+    </script>
   </head>
   <body>
     <input id="regex" type="text" placeHolder="Regular expression here" value="(a|b)?(b|c)(c|d)*(d|e)(e|f)+(f|g)" onKeyPress="{ if(event.keyCode===13) window.location.replace(window.location.pathname+'?regex='+$('#regex').val()); }"></input>
