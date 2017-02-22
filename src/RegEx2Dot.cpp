@@ -67,6 +67,24 @@ struct DFA {
         }
         nfa.pool[dfa.init].final=1;
     }
+void closure(const NFA& nfa, set<size_t>& req){
+    queue<size_t> q;
+    for(set<size_t>::iterator i = req.begin(); i!=req.end(): i++)
+    q.push(*i);
+    while(q.size()){
+        size_t u=q.front();
+        q.pop();
+        map<char, set<size_t> >::const_iterator x =nfa.pool[u].trans.find.find(0);
+        if(x==nfa.pool[u].trans.end())
+        continue;
+        for(set<size_t>::const_iterator i=x->second.begin();
+        i!=x->second.end();
+        i++)
+        if(req.find(*i)==req.end()){
+            req.insert(*i);
+            q.push(*i);
+        }
+    }
+}
 
- 
 
