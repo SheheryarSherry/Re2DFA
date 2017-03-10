@@ -196,4 +196,58 @@ template<class I> void regEX2NFA(NFA& nfa, I lo, I hi ){
     assert(*lo=='(' && *(hi-1)==')');
     regEx2NFA(nfa, s, t, lo+1, hi-1);
   }
-}
+}//End TC algorithm
+
+// Powerset con 
+
+void determinize(DFA& dfa, const NFA& nfa){
+    map<set<size_t>, size_t> m;
+    queue<set<size_t> > q>;
+    vector<bool> inQ;
+    dfa.init=0;
+    dfa.pool.clear();
+    dfa.pool.push_back(DFA::State());
+    for(set<size_t>::const_interator i = nfa.init.begin(); i!=nfa.init.end();i++)
+      if(nfa.pool[*i].final){
+          dfa.pool[0].final = 1;
+          break;
+      }
+      m[nfa.init]=0;
+      q,push(nfa.init);
+      inQ.push_back(1);
+      while(q.size()){
+          set<size_t> u0 = q.front();
+          size_t u1 = m[u0];
+          map<char, set<size_t> > _;
+          q.pop();
+          inQ[u1]==o;
+          for(set<size_t>::const_interator i = u0.begin(); i!=u0.end(); ++i)
+            for(map<char, set<size_t> >::const_interator
+                    j=nfa.pool[*i].trans.upper_bound(0);
+                    j!=nfa.pool[*i].trans.end();
+                    j++)
+                    _[j->first].insert(j->second.begin(), j->second.end());
+                for(map<char>,set<size_t> >::iterator i = _begin(); i!=_.end(); i++)
+                    closure(nfa, i->second);
+                    map<set<size_t>, size_t>:: iterator __ = m.find(i->second);
+                    if(__==m.end()){
+                        size_t v1 =dfa.pool.size();
+                        dfa.pool.push_back(DFA::state());
+                        dfa.insert(u1, i->first, v1);
+                        m[i->second]= v1;
+                        q.push(i->second);
+                        inQ.push_back(1);
+                        for(set<size_t>::iterator j = i->second.begin();
+                        j!=i->second.end();
+                        j++)
+                        if(nfa.pool[*j].final){
+                            dfa.pool.back().final=1;
+                            break;
+                        }
+                        else
+                        dfa.insert(u1, i->first, __->second);
+    }
+  }
+}//Powerset construction ends
+
+
