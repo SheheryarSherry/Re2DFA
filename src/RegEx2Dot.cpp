@@ -251,3 +251,16 @@ void determinize(DFA& dfa, const NFA& nfa){
 }//Powerset construction ends
 
 
+//brozowski algo start
+template<class I> void regEx2DFA(DFA& dfa, I lo, I hi){
+    NFA nfa;
+    regEX2NFA(nfa, lo, hi);
+    determinize(dfa, nfa);
+    reverse(nfa, dfa);
+    determinize(dfa, nfa);
+    reverse(nfa, dfa);
+    determinize(dfa, nfa);
+}
+
+//brozowski's algo ends
+
