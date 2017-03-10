@@ -87,4 +87,113 @@ void closure(const NFA& nfa, set<size_t>& req){
     }
 }
 
-
+//thompson algo
+template<class I> void regEX2NFA(NFA& nfa, I lo, I hi ){
+   nfa.pool.clear();
+   nfa.pool.push_back(NFA::State());
+   nfa.pool.push_back(NFA::State());
+   nfa.pool[1].final=1;
+   nfa.init.clear();
+   nfa.init.insert(0);
+   regEX2NFA(nfa,0,1,lo,hi);
+   closure(nfa,nfa.init);
+    }
+    template<class I> void regEx2NFA(NFA& nfa, size_t s, size_t t, I lo, I hi) {
+  if(hi-lo == 1) {
+    nfa.insert(s, *lo, t);
+    return;
+  }
+  if(hi-lo==2 && *lo=='\\') {
+    nfa.insert(s, *(lo+1), t);
+    return;
+  }
+  I option(lo), concatenation(lo);
+  size_t _ = 0;
+  for(I i = lo; i!=hi; ++i)
+    switch(*i) {
+      case '\\':
+        if(!_)
+          concatenation = i;
+        ++i;
+        break;
+      case '(':
+        if(!_)
+          concatenation = i;
+        ++_;
+        break;
+      case ')':
+        assert(_);
+        --_;
+        break;
+      case '|':
+        if(!_)
+          option = i;
+        break;
+      case '?':
+        break;
+      case '*':
+        break;
+      case '+':
+        break;
+      default:
+        if(!_)
+          concatenation = i;
+    }
+  assert(_==0);
+  if(option!=lo) {
+    size_t i0 = nfa.pool.size(), i1 = nfa.pool.size()+1;
+    nfa.pool.push_back(NFA::State());
+    nfa.pool.push_back(NFA::State());
+    nfa.insert(s, 0, i0);
+    nfa.insert(i1, 0, t);
+    regEx2NFA(nfa, i0, i1, lo, option);
+    i0 = nfa.pool.size(), i1 = nfa.pool.size()+1;
+    nfa.pool.push_back(NFA::State());
+    nfa.pool.push_back(NFA::State());
+    nfa.insert(s, 0, i0);
+    nfa.insert(i1, 0, t);
+    regEx2NFA(nfa, i0, i1, option+1, hi);
+  } else if(concatenation!=lo) {
+    size_t i0 = nfa.pool.size(), i1 = nfa.pool.size()+1;
+    nfa.pool.push_back(NFA::State());
+    nfa.pool.push_back(NFA::State());
+    nfa.insert(i0, 0, i1);
+    regEx2NFA(nfa, s, i0, lo, concatenation);
+    regEx2NFA(nfa, i1, t, concatenation, hi);
+  } else if(*(hi-1) == '?') {
+    size_t i0 = nfa.pool.size(), i1 = nfa.pool.size()+1;
+    nfa.pool.push_back(NFA::State());
+    nfa.pool.push_back(NFA::State());
+    nfa.insert(s, 0, i0);
+    nfa.insert(s, 0, t);
+    nfa.insert(i1, 0, t);
+    regEx2NFA(nfa, i0, i1, lo, hi-1);
+  } else if(*(hi-1) == '*') {
+    size_t i0 = nfa.pool.size(), i1 = nfa.pool.size()+1;
+    nfa.pool.push_back(NFA::State());
+    nfa.pool.push_back(NFA::State());
+    nfa.insert(s, 0, i0);
+    nfa.insert(s, 0, t);
+    nfa.insert(i1, 0, i0);
+    nfa.insert(i1, 0, t);
+    regEx2NFA(nfa, i0, i1, lo, hi-1);
+  } else if(*(hi-1) == '+') {
+    size_t i0 = nfa.pool.size(), i1 = nfa.pool.size()+1;
+    nfa.pool.push_back(NFA::State());
+    nfa.pool.push_back(NFA::State());
+    nfa.insert(i0, 0, i1);
+    regEx2NFA(nfa, s, i0, lo, hi-1);
+    s = i1;
+    i0 = nfa.pool.size(), i1 = nfa.pool.size()+1;
+    nfa.pool.push_back(NFA::State());
+    nfa.pool.push_back(NFA::State());
+    nfa.insert(s, 0, i0);
+    nfa.insert(s, 0, t);
+    nfa.insert(i1, 0, i0);
+    nfa.insert(i1, 0, t);
+    regEx2NFA(nfa, i0, i1, lo, hi-1);
+  } else {
+    assert(*lo=='(' && *(hi-1)==')');
+    regEx2NFA(nfa, s, t, lo+1, hi-1);
+  }
+}
