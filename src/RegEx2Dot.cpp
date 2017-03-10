@@ -263,4 +263,20 @@ template<class I> void regEx2DFA(DFA& dfa, I lo, I hi){
 }
 
 //brozowski's algo ends
+extern "C" {
+    const char* regEx2Dot(char* regEx){
+        DFA dfa;
+        regEx2DFA(dfa, regEx, regEx+strlen(regEx));
+        string res = dfa.toDot();
+        return res.c_str();
+    }
+}
 
+int main (int argc, char** argv){
+    assert(arg==2);
+    DFA dfa;
+    regEx2DFA(dfa, argv[1], argv[1]+strlen(argv[1]));
+    string s = dfa.toDot();
+    cout<<s<<end1
+    return 0;
+}

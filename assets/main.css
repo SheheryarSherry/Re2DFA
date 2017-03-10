@@ -2,8 +2,8 @@ body { margin: 0; }
 
 #regex {
   border: none;
-  border-bottom: 1px solid indianred;
-  color: indianred;
+  border-bottom: 1px solid midnightblue;
+  color:midnightblue;
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
   font-size: 32px;
   margin-top: 0;
@@ -13,8 +13,8 @@ body { margin: 0; }
 }
 
 #regex:focus {
-  border-bottom: 1px solid indianred;
-  box-shadow: 0 5px 5px -5px indianred;
+  border-bottom: 1px solid black;
+  box-shadow: 0 5px 5px -5px darkgray;
   outline-style: none;
 }
 
