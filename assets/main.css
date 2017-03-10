@@ -7,7 +7,7 @@ body { margin: 0;
   border: none;
   border-bottom: 1px solid midnightblue;
   color:midnightblue;
-  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family:Consolas;
   font-size: 32px;
   margin-top: 0;
   position: fixed;

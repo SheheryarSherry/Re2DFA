@@ -52,7 +52,6 @@ struct DFA {
     return res;
   }
 };
-
 void reverse(NFA& nfa, const DFA& dfa) {
   nfa.init.clear();
   nfa.pool.assign(dfa.pool.size(), NFA::State());
@@ -105,7 +104,7 @@ template<class I> void regEx2NFA(NFA& nfa, size_t s, size_t t, I lo, I hi) {
     nfa.insert(s, *lo, t);
     return;
   }
-  if(hi-lo==2 && *lo=='\\') {
+  if(hi-lo==2 && *lo=='\\') 
     nfa.insert(s, *(lo+1), t);
     return;
   }
