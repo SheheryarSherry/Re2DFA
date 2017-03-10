@@ -26,8 +26,8 @@ body { margin: 0; }
 }
 
 #button > a {
-  background-color: #d9534f;
-  border: 1px solid #d43f3a;
+  background-color:lawngreen;
+  border: 1px solid black;
   border-radius: 4px;
   color: #fff;
   display: inline-block;
